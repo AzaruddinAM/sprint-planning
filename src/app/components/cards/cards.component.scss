@@ -1,0 +1,28 @@
+.card {
+    border: 1px solid #ddd; /* Add a border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    transition: transform 0.3s ease; /* Add smooth transition */
+  }
+
+  .card:hover {
+    transform: translateY(5px); /* Lift the card on hover */
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .card-text {
+    font-size: 1rem;
+    color: #666;
+  }
+  .hand-cursor{
+    cursor: pointer;
+  }

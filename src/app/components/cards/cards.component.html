@@ -1,0 +1,24 @@
+
+  <div class="container mt-5">
+    <div class="row">
+    <!-- <div class="col-md-4 p-1" *ngIf="showHead">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" (click)="add()">ADD</h5>
+                  </div>
+              </div>
+      </div> -->
+      <ng-container *ngIf="cards.length">
+      <div class="col-md-4 p-1" *ngFor="let card of cards">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{card.name}}
+                <!-- <i class="fa fa-pencil float-end mx-2" (click)="editCard(card.name)" aria-hidden="true"></i> -->
+                <i class="fa fa-trash float-end mx-2 hand-cursor" (click)="deleteCard(card.name)" aria-hidden="true"></i></h5>
+              <p class="card-text">Story Point : {{card.points}}</p>
+            </div>
+          </div>
+        </div>
+        </ng-container>
+      </div>
+    </div>

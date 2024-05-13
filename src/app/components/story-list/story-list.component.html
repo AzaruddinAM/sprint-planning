@@ -1,0 +1,17 @@
+<div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center">
+        <h1>Story List</h1>
+        <button type="button" class="btn btn-outline-primary" (click)="addNew()">Add New</button>
+      </div>
+    </div>
+  </div>
+  <app-cards [cards]="stories" [target]="'story'"></app-cards>
+<!-- <ul>
+  <li *ngFor="let story of stories">{{ story.name }} - {{ story.points }} points</li>
+</ul> -->
+
+
+
+</div>
