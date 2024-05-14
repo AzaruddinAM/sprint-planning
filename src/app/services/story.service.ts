@@ -26,7 +26,7 @@ export class StoryService {
     return this.stories.getValue()
   }
   clearStories():string {
-    if(!this.stories.getValue().length){
+    if(this.stories.getValue().length===0){
       return 'Nothing to clear'
     }
     this.stories.next([])
@@ -36,42 +36,47 @@ export class StoryService {
   addsprint(sprint: Story):string {
     console.log(sprint);
     
-    const existingStory = this.stories.getValue()
+    const existingStories = this.stories.getValue();
 
-    if (existingStory && existingStory.length) {
-      console.log(this.sprint.getValue(),"this.sprint.getValue()");
-      
-      if(this.sprint.getValue().length>0)
-        {
-          return 'Please clear current sprint';
+    if (!existingStories || existingStories.length === 0) {
+        return 'There are no tasks available in stories.';
+    }
+
+    const existingSprint = this.sprint.getValue();
+
+    if (existingSprint && existingSprint.length > 0) {
+        return 'Please clear the current sprint.';
+    }
+    // this.findCombinations(existingStories,sprint.points)
+    // Example usage
+var array = existingStories
+const target = sprint.points
+const combinations :any= this.combinationSum(array, target);
+
+console.log(combinations);
+let selectedStories = []
+if(combinations.length===0)
+  {
+	let sortedStories = array.slice().sort((a,b) => b.points-a.points);
+    //this.findCombinations(existingStories.filter(ite=>ite.points),sprint.points)
+    let selectedStorySum = 0;
+
+    for (let story of sortedStories) {
+        if (selectedStorySum + story.points <= target) {
+            selectedStorySum += story.points
+            selectedStories.push(story);
         }
-      let sprints :Story[]= []//this.stories.getValue().find(s => s.points === sprint.points);
-      const sortedStories = this.stories.getValue().slice().sort((a,b)=>a.points-b.points)
-      console.log(sortedStories);
-      let selectedStorySum=0
-      for (let i of sortedStories)
-        {
-          if (Number(i.points)<=Number(sprint.points) && selectedStorySum<Number(sprint.points)) {
-            selectedStorySum+=Number(i.points)
-            sprints.push(i)
-          }
-          else if (Number(i.points)===Number(sprint.points)) {
-            sprints=[]
-            sprints.push(i)
-          }
-        }
-        if(sprints.length)
-          {
-            this.sprint.next(sprints);
-            return sprints?'added':'There is no task for current Sprint capacity .Please increase target points'
-          }
-          else{
-            return 'Target sprint points should less than sum of existing story points'
-          }
-      }
-    else
-    {
-      return 'There is no task available in stories';
+    }
+    console.log(combinations);
+}
+else{
+  selectedStories=combinations[0]
+}
+    if (selectedStories.length > 0) {
+        this.sprint.next(selectedStories);
+        return 'Stories added to sprint.';
+    } else {
+        return 'Target sprint points should be less than or equal to the sum of existing story points.';
     }
   }
   getsprint():Story[]
@@ -79,7 +84,7 @@ export class StoryService {
     return this.sprint.getValue()
   }
   clearSprint():string {
-    if(!this.sprint.getValue().length){
+    if(this.sprint.getValue().length===0){
       return 'Nothing to clear'
     }
     this.sprint.next([])
@@ -121,4 +126,61 @@ export class StoryService {
       });
     };
   }
+
+  findCombinations(array:any, capacity:any) {
+    const result :any= [];
+
+    function backtrack(startIndex:any, currentCombination:any, currentSum:any) {
+        if (currentSum < capacity) {
+            result.push([...currentCombination]);
+        }
+
+        for (let i = startIndex; i < array.length; i++) {
+            currentCombination.push(array[i]);
+            backtrack(i + 1, currentCombination, currentSum + array[i]);
+            currentCombination.pop();
+        }
+    }
+
+    backtrack(0, [], 0);
+    console.log(result);
+    
+    return result;
+}
+combinationSum(array:any, target:number) {
+  const result = [];
+  const stack :any= [];
+  let index = 0;
+  let currentSum = 0;
+
+  while (true) {
+      if (currentSum === target) {
+          result.push([...stack]);
+          if (!stack.length) break;
+          const last = stack.pop();
+          currentSum -= last.points;
+          index = array.indexOf(last) + 1;
+      }
+
+      let found = false;
+      for (let i = index; i < array.length; i++) {
+          if (currentSum + array[i].points <= target && !stack.includes(array[i])) {
+              stack.push(array[i]);
+              currentSum += array[i].points;
+              index = i + 1;
+              found = true;
+              break;
+          }
+      }
+
+      if (!found) {
+          if (!stack.length) break;
+          const last = stack.pop();
+          currentSum -= last.points;
+          index = array.indexOf(last) + 1;
+      }
+  }
+
+  return result;
+}
 }
